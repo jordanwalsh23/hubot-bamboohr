@@ -1,7 +1,7 @@
 {
   "name": "hubot-bamboohr",
   "description": "Access information from BambooHR like employee details and whos on leave",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Jordan Walsh <jordanwalsh23@hotmail.com>",
   "license": "MIT",
   "keywords": [
