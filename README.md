@@ -15,6 +15,12 @@ Then add **hubot-bamboohr** to your `external-scripts.json`:
 ```json
 ["hubot-bamboohr"]
 ```
+Two environment variables are required:
+
+- HUBOT_BAMBOOHR_APIKEY - Your BambooHR API key (see your BambooHR admin)
+- HUBOT_BAMBOOHR_DOMAIN - Your BambooHR subdomain
+
+Once your environment variables are sent, the following commands are available:
 
 ## Get Employee Data
 
