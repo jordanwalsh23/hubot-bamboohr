@@ -10,10 +10,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/hubot-scripts/hubot-bamboohr.git"
+    "url": "git@github.com:jordanwalsh23/hubot-bamboohr.git"
   },
   "bugs": {
-    "url": "https://github.com/hubot-scripts/hubot-bamboohr/issues"
+    "url": "https://github.com/jordanwalsh23/hubot-bamboohr/issues"
   },
   "dependencies": {
     "coffee-script": "~1.6",
@@ -33,5 +33,9 @@
   "main": "index.coffee",
   "scripts": {
     "test": "grunt test"
+  },
+  "homepage": "https://github.com/hubot-scripts/hubot-bamboohr#readme",
+  "directories": {
+    "test": "test"
   }
 }

@@ -13,7 +13,7 @@
 #   hubot whos(off|out) - returns the list of employees that are on leave today
 #
 # Author:
-#   Jordan Walsh <jwalsh@whispir.com>
+#   Jordan Walsh <jordanwalsh23@gmail.com>
 
 bamboohr_apikey = process.env.HUBOT_BAMBOOHR_APIKEY
 bamboohr_domain = process.env.HUBOT_BAMBOOHR_DOMAIN
