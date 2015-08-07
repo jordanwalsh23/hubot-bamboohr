@@ -12,8 +12,8 @@ describe 'bamboohr', ->
 
     require('../src/bamboohr')(@robot)
 
-  it 'registers a respond listener', ->
-    expect(@robot.respond).to.have.been.calledWith(/hello/)
+  it 'registers a respond listener for "bamboo"', ->
+    expect(@robot.respond).to.have.been.calledWith(/bamboo\s([\w\s]+)$/i)
 
-  it 'registers a hear listener', ->
-    expect(@robot.hear).to.have.been.calledWith(/orly/)
+  it 'registers a respond listener for "whosoff"', ->
+    expect(@robot.respond).to.have.been.calledWith(/whos(out|off)$/i)
