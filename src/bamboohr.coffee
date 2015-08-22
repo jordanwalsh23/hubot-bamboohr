@@ -17,6 +17,28 @@
 
 bamboohr_apikey = process.env.HUBOT_BAMBOOHR_APIKEY
 bamboohr_domain = process.env.HUBOT_BAMBOOHR_DOMAIN
+date_format = process.env.HUBOT_BAMBOOHR_DATEFORMAT
+default_timezone = process.env.HUBOT_BAMBOOHR_TIMEZONE
+
+unless String::trim then String::trim = -> @replace /^\s+|\s+$/g, ""
+
+getYear = (d) ->
+  return d.getFullYear()
+
+getMonth = (d) ->
+  mm = parseInt(d.getMonth()) + 1
+  if mm < 10
+    mm = "0" + "#{mm}"
+  return mm
+
+getDay = (d) ->
+  dd = d.getDate()
+  if dd < 10
+    dd = "0" + "#{dd}"  
+  return dd
+
+formatDateString = (d) ->
+  return getYear(d) + "-" + getMonth(d) + "-" + getDay(d)
 
 # Configures the plugin
 module.exports = (robot) ->
@@ -62,27 +84,48 @@ module.exports = (robot) ->
         if !matched
           msg.send "No match found for #{msg.match[1]}"
 
-  robot.respond /whos(out|off)$/i, (msg) ->
+  robot.respond /whos(out|off)(\stoday|\sthis\sweek|\sthis\smonth)?$/i, (msg) ->
+
     bambooapi = new (require 'node-bamboohr')({apikey: "#{bamboohr_apikey}", subdomain: "#{bamboohr_domain}"})
 
-    d = new Date();
-    yyyy = d.getFullYear()
-    mm = parseInt(d.getMonth()) + 1
-    dd = d.getDate()
+    timePeriod = msg.match[2];
 
-    if mm < 10
-      mm = "0" + "#{mm}"
+    if !timePeriod
+      timePeriod = "today"
+    else
+      timePeriod = timePeriod.trim()
 
-    if dd < 10
-      dd = "0" + "#{dd}"  
+    console.log "timePeriod is #{timePeriod}"
 
-    dateString = yyyy + "-" + mm + "-" + dd
+    #set the dates
+    startDate = new Date()
+    endDate = new Date()
+
+    if timePeriod == "this month"
+      endDate = new Date(1900+startDate.getYear(), startDate.getMonth()+1, 0)
+    
+    if timePeriod == "this week"
+      endDate = new Date(1900+startDate.getYear(), startDate.getMonth()+1, 0)
+
+    #startdate
+    startDateStr = formatDateString(startDate);
+    endDateStr = formatDateString(endDate);
+
+    console.log "startDate is #{startDate}"
+    console.log "endDate is #{endDateStr}"
 
     peopleOnLeave = false
 
-    bambooapi.whosOut dateString, dateString, (err, obj) ->
+    bambooapi.whosOut startDateStr, endDateStr, (err, obj) ->
       
-      response = "*People currently on leave (#{dd}/#{mm}/#{yyyy}):*\n\n"
+      from = getDay(startDate) + "/" + getMonth(startDate) + "/" + getYear(startDate)
+      to = getDay(endDate) + "/" + getMonth(endDate) + "/" + getYear(endDate)
+
+      if date_format && date_format.toLowerCase() == "us"
+        from = getMonth(startDate) + "/" + getDay(startDate) + "/" + getYear(startDate)
+        to = getMonth(endDate) + "/" + getDay(endDate) + "/" + getYear(endDate)
+
+      response = "*People on leave (#{from} - #{to})*\n\n"
 
       for timeoff in obj.calendar.item
 
