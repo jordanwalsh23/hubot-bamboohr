@@ -16,4 +16,4 @@ describe 'bamboohr', ->
     expect(@robot.respond).to.have.been.calledWith(/bamboo\s([\w\s]+)$/i)
 
   it 'registers a respond listener for "whosoff"', ->
-    expect(@robot.respond).to.have.been.calledWith(/whos(out|off)$/i)
+    expect(@robot.respond).to.have.been.calledWith(/whos(out|off)(\stoday|\stomorrow|\sthis\sweek|\sthis\smonth|\snext\sweek|\snext\smonth)?$/i)

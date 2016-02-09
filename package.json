@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "coffee-script": "~1.6",
+    "moment-timezone": "^0.5.0",
     "node-bamboohr": "0.0.4"
   },
   "devDependencies": {
