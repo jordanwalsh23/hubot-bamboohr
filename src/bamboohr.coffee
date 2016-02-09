@@ -25,7 +25,6 @@ user_tz_lookup = process.env.HUBOT_SLACK_USER_TZ_LOOKUP
 unless String::trim then String::trim = -> @replace /^\s+|\s+$/g, ""
 
 formatBambooDate = (d) ->
-  console.log d
 
   pattern = ///
     ^([\d]{4})- # Capture the year
@@ -206,7 +205,7 @@ module.exports = (robot) ->
       msg.robot.slack.users.info params, (err, res) -> 
         if res 
           tz = res.user.tz
-          msg.send "#{res.user.real_name} is in #{tz}. Querying BambooHR now."
+          msg.send "Detected timezone for #{res.user.real_name} as #{tz}. Querying BambooHR now."
         else
           tz = "Australia\/Melbourne"
           msg.send "Querying BambooHR based on #{tz} time"
@@ -219,4 +218,3 @@ module.exports = (robot) ->
       dates = calculateDateStrings("Australia\/Melbourne",timePeriod)
       printDates(msg, dates)
       
-
