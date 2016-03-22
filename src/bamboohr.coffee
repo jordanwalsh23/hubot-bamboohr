@@ -54,7 +54,7 @@ formatBambooDate = (d) ->
   return dateStr
 
 calculateDateStrings = (tz, timePeriod) ->
-  
+
   if !timePeriod
     timePeriod = "today"
   else
@@ -70,7 +70,7 @@ calculateDateStrings = (tz, timePeriod) ->
     when "tomorrow"
       startDate = startDate.add(1, 'day')
       endDate = startDate
-    
+
     when "this week"
 
       dayOfMonth = parseInt(startDate.format('D'))
@@ -84,10 +84,10 @@ calculateDateStrings = (tz, timePeriod) ->
       dayOfMonth = parseInt(startDate.format('D'))
 
       endDate = endDate.add(1, 'months').subtract(dayOfMonth, 'days')
-    
+
     when "next week"
       offset = 7 - parseInt(startDate.format('d'))
-      
+
       startDate.add(offset, 'days')
       endDate.add(6 + offset, 'days')
 
@@ -96,8 +96,8 @@ calculateDateStrings = (tz, timePeriod) ->
 
       startDate.add(1, 'months').subtract(dayOfMonth-1, 'days')
       endDate.add(2, 'months').subtract(dayOfMonth, 'days')
-    
-  response = 
+
+  response =
     startDate: startDate
     endDate: endDate
     startDateString: startDate.format("YYYY-MM-DD")
@@ -110,7 +110,7 @@ printDates = (msg, dates) ->
   bambooapi = new (require 'node-bamboohr')({apikey: "#{bamboohr_apikey}", subdomain: "#{bamboohr_domain}"})
 
   bambooapi.whosOut dates.startDateString, dates.endDateString, (err, obj) ->
-    
+
     startDate = dates.startDate
     endDate = dates.endDate
     peopleOnLeave = false
@@ -128,17 +128,18 @@ printDates = (msg, dates) ->
 
     response = "*People on leave (#{from} - #{to})*\n\n"
 
-    for timeoff in obj.calendar.item
+    if obj && obj.calendar != ''
+      for timeoff in obj.calendar.item
 
-      if timeoff.employee && timeoff.employee.length > 0
-        response += "*#{timeoff.employee[0]._}*\n"
+        if timeoff.employee && timeoff.employee.length > 0
+          response += "*#{timeoff.employee[0]._}*\n"
 
-        timeOffStart = formatBambooDate timeoff.start[0];
-        timeOffEnd = formatBambooDate timeoff.end[0];
+          timeOffStart = formatBambooDate timeoff.start[0];
+          timeOffEnd = formatBambooDate timeoff.end[0];
 
-        response += "#{timeOffStart} - #{timeOffEnd}\n\n"
-        peopleOnLeave = true
-    
+          response += "#{timeOffStart} - #{timeOffEnd}\n\n"
+          peopleOnLeave = true
+
     if peopleOnLeave
       msg.send response
     else
@@ -147,7 +148,7 @@ printDates = (msg, dates) ->
 
 # Configures the plugin
 module.exports = (robot) ->
- 
+
   robot.respond /bamboo\s([\w\s]+)$/i, (msg) ->
 
     if msg.match[1].length < 3
@@ -166,26 +167,26 @@ module.exports = (robot) ->
 
           if name != "" && name.indexOf("#{search}") >= 0
             msg.send "Found *#{employee.fields.displayName}*\n"
-            
-            if employee.fields.photoUrl 
+
+            if employee.fields.photoUrl
               msg.send employee.fields.photoUrl
 
             if employee.fields.jobTitle
               result = "*Job Title:* #{employee.fields.jobTitle}\n"
-            
+
             if employee.fields.workPhone
               result += "*Work Phone:* #{employee.fields.workPhone}\n"
-            
+
             if employee.fields.mobilePhone
               result += "*Mobile Phone:* #{employee.fields.mobilePhone}\n"
-            
+
             if employee.fields.workEmail
               result += "*Email Address:* #{employee.fields.workEmail}"
-            
+
             msg.send result
 
             matched = true
-        
+
         if !matched
           msg.send "No match found for #{msg.match[1]}"
 
@@ -199,11 +200,11 @@ module.exports = (robot) ->
 
     if user_tz_lookup == "true"
       #Need to lookup the user's timezone info from slack
-      params = 
+      params =
         user : msg.envelope.user.id
 
-      msg.robot.slack.users.info params, (err, res) -> 
-        if res 
+      msg.robot.slack.users.info params, (err, res) ->
+        if res
           tz = res.user.tz
           msg.send "Detected timezone for #{res.user.real_name} as #{tz}. Querying BambooHR now."
         else
@@ -212,9 +213,8 @@ module.exports = (robot) ->
 
         dates = calculateDateStrings(tz,timePeriod)
         printDates(msg, dates, )
-    else 
+    else
       #Assume the default system timezone
       msg.send "Querying BambooHR based on Australia\/Melbourne time"
       dates = calculateDateStrings("Australia\/Melbourne",timePeriod)
       printDates(msg, dates)
-      

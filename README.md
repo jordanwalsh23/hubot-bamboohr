@@ -58,3 +58,8 @@ The `whosoff` function also takes an optional time period:
 - next week
 - this month
 - next month
+
+## Change Log
+
+V1.0.6
+- Fixed a bug when there was no one on leave it threw an error
