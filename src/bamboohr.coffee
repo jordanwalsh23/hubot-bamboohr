@@ -171,8 +171,10 @@ module.exports = (robot) ->
             if employee.fields.photoUrl
               msg.send employee.fields.photoUrl
 
+            result = ''
+
             if employee.fields.jobTitle
-              result = "*Job Title:* #{employee.fields.jobTitle}\n"
+              result += "*Job Title:* #{employee.fields.jobTitle}\n"
 
             if employee.fields.workPhone
               result += "*Work Phone:* #{employee.fields.workPhone}\n"
