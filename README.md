@@ -1,5 +1,7 @@
 # hubot-bamboohr
 
+[![npm version](https://badge.fury.io/js/hubot-bamboohr.svg)](https://badge.fury.io/js/hubot-bamboohr)
+
 Access information from BambooHR like employee details and whos on leave
 
 See [`src/bamboohr.coffee`](src/bamboohr.coffee) for full documentation.
