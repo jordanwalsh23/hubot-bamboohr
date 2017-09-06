@@ -171,6 +171,8 @@ module.exports = (robot) ->
             if employee.fields.photoUrl
               msg.send employee.fields.photoUrl
 
+            msg.send "https://#{bamboohr_domain}.bamboohr.co.uk/employees/employee.php/?id=#{employee.id}"
+
             result = ''
 
             if employee.fields.jobTitle
